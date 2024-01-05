@@ -1,8 +1,15 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 const App = () => {
   return (
-    <div className="text-5xl font-bold underline text-center">Hello World</div>
+    <>
+      {/* Navbar */}
+      <div>
+        <Outlet />
+      </div>
+      {/* Footer */}
+    </>
   );
 };
 
