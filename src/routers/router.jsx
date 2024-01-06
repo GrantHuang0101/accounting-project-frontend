@@ -1,12 +1,14 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "../App";
-import Home from "../home/Home";
-import Register from "../components/Register";
-import Login from "../components/Login";
-import Logout from "../components/Logout";
-import DashBoardLayout from "../dashborad/DashboardLayout";
-import Dashboard from "../dashborad/Dashboard";
+import App from "../layouts/App";
+import Home from "../views/Home";
+import Register from "../views/auth/Register";
+import Login from "../views/auth/Login";
+import Logout from "../views/auth/Logout";
+import DashBoardLayout from "../layouts/DashboardLayout";
+import Dashboard from "../views/dashborad/Dashboard";
 import ProtectedRoute from "./protectedRouter";
+import Transactions from "../views/dashborad/Transactions";
+import Analytics from "../views/dashborad/Analytics";
 
 const router = createBrowserRouter([
   {
@@ -21,15 +23,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <DashBoardLayout />,
+    element: (
+      <ProtectedRoute>
+        <DashBoardLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "/user",
-        element: (
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        ),
+        element: <Dashboard />,
+      },
+      {
+        path: "/user/transactions",
+        element: <Transactions />,
+      },
+      {
+        path: "/user/analytics",
+        element: <Analytics />,
       },
     ],
   },
