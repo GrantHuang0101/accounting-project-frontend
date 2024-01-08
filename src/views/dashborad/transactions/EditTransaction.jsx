@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import BackButton from "../../../components/buttons/BackButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Datepicker, Label, Textarea } from "flowbite-react";
@@ -17,6 +17,7 @@ const EditTransaction = () => {
   const [previews, setPreviews] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [description, setDescription] = useState("");
+  const [editEntries, setEditEntries] = useState([]);
 
   useEffect(() => {
     // Fetch the transaction details using the ID
@@ -33,7 +34,8 @@ const EditTransaction = () => {
           format(new Date(transaction.transactionDate), "yyyy-MM-dd")
         );
         setDescription(transaction.description);
-        // Add form row based on the fetched data
+
+        setEditEntries(() => transactionRow.map((row) => row.transactionId));
 
         setFormRows(
           transactionRow.map((vals, index) => {
@@ -60,12 +62,7 @@ const EditTransaction = () => {
       .catch((error) => {
         console.log(error);
       });
-    const editEntries = formRows.map((row) => row.vals.transactionId);
   }, [authToken, id]);
-
-  const editEntries = formRows
-    .map((row) => row.vals?.transactionId)
-    .filter((entry) => entry !== null);
 
   const addFormRow = () => {
     setFormRows((prevRows) => [...prevRows, { rowId: Date.now() }]);
