@@ -7,8 +7,9 @@ import Logout from "../views/auth/Logout";
 import DashBoardLayout from "../layouts/DashboardLayout";
 import Dashboard from "../views/dashborad/Dashboard";
 import ProtectedRoute from "./protectedRouter";
-import Transactions from "../views/dashborad/Transactions";
+import Transactions from "../views/dashborad/transactions/Transactions";
 import Analytics from "../views/dashborad/Analytics";
+import CreateTransaction from "../views/dashborad/transactions/CreateTransaction";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/user/transactions",
         element: <Transactions />,
+      },
+      {
+        path: "/user/transactions/create",
+        element: <CreateTransaction />,
       },
       {
         path: "/user/analytics",

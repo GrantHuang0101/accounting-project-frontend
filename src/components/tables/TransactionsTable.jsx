@@ -1,49 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Table } from "flowbite-react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useAuth } from "../AuthProvider";
 import { format } from "date-fns";
+import CreateTransactionButton from "../buttons/createTransactionButton";
 
-const TransactionsTable = ({ transactions }) => {
-  const [accountDetails, setAccountDetails] = useState({});
-  const { authToken } = useAuth();
-
-  useEffect(() => {
-    const fetchAccountDetails = async (accountId) => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/accounts/${accountId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-        setAccountDetails((prevDetails) => ({
-          ...prevDetails,
-          [accountId]: response.data.accountName,
-        }));
-      } catch (error) {
-        console.error("Error fetching account details:", error);
-      }
-    };
-
-    transactions.forEach((transaction) => {
-      const { accountId } = transaction;
-      if (!accountDetails[accountId]) {
-        fetchAccountDetails(accountId);
-      }
-    });
-  }, [transactions, accountDetails]);
-
+const TransactionsTable = ({ transactions, fetchData }) => {
   const handleDelete = () => {};
-
   return (
     <div className="px-4 my-12">
-      <h2 className="mb-8 text-3xl font-bold">Manage Transactions</h2>
-      <div className="lg:w-[1000px]">
-        <Table className="md:w-full">
+      <div className="flex flex-row items-center justify-between mb-8 w-full">
+        <p className="mb-2 text-3xl font-bold">Manage Entries</p>
+        <CreateTransactionButton className="" />
+      </div>
+      <div className="w-full">
+        <Table className="">
           <Table.Head>
             <Table.HeadCell>Date</Table.HeadCell>
             <Table.HeadCell>Account</Table.HeadCell>
@@ -60,13 +30,13 @@ const TransactionsTable = ({ transactions }) => {
                   {format(new Date(transaction.transactionDate), "yyyy-MM-dd")}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {accountDetails[transaction.accountId]}
+                  {transaction.accountName}
                 </Table.Cell>
                 <Table.Cell className="font-semibold">
-                  {transaction.dc === "d" ? transaction.amount : null}
+                  {transaction.dc === "debit" ? transaction.amount : null}
                 </Table.Cell>
                 <Table.Cell className="font-semibold">
-                  {transaction.dc === "c" ? transaction.amount : null}
+                  {transaction.dc === "credit" ? transaction.amount : null}
                 </Table.Cell>
                 <Table.Cell>
                   <Link
@@ -77,7 +47,7 @@ const TransactionsTable = ({ transactions }) => {
                   </Link>
                   <button
                     onClick={handleDelete}
-                    className="bg-red-600 px-4 py-1 font-semibold text-white rounded-sm hover:bg-sky-400"
+                    className="font-semibold text-red-600 hover:underline dark:text-red-500 mr-5"
                   >
                     Delete
                   </button>

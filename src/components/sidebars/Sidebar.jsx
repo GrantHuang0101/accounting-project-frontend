@@ -35,7 +35,7 @@ const Sidebar = () => {
   };
 
   return (
-    <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
+    <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 fixed min-h-screen">
       <div className="mb-2 flex items-center gap-4 p-4">
         <img
           src="https://docs.material-tailwind.com/img/logo-ct-dark.png"
@@ -147,21 +147,7 @@ const Sidebar = () => {
             </List>
           </AccordionBody>
         </Accordion>
-        <ListItem>
-          <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Inbox
-          <ListItemSuffix>
-            <Chip
-              value="14"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            />
-          </ListItemSuffix>
-        </ListItem>
+
         <ListItem>
           <ListItemPrefix>
             <UserCircleIcon className="h-5 w-5" />

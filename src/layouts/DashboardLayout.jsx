@@ -4,9 +4,11 @@ import Sidebar from "../components/sidebars/Sidebar";
 
 const DashBoardLayout = () => {
   return (
-    <div className="flex gap-4 flex-col md:flex-row">
+    <div className="flex">
       <Sidebar />
-      <Outlet />
+      <div className="flex-grow overflow-y-auto p-4 pl-80">
+        <Outlet />
+      </div>
     </div>
   );
 };

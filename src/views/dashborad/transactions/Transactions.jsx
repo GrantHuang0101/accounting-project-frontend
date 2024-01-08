@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "../../components/AuthProvider";
-import TransactionsTable from "../../components/tables/TransactionsTable";
+import { useAuth } from "../../../components/AuthProvider";
+import TransactionsTable from "../../../components/tables/TransactionsTable";
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const { authToken } = useAuth();
 
-  useEffect(() => {
+  const fetchData = () => {
     axios
       .get("http://localhost:8080/transactions/user", {
         headers: {
@@ -20,6 +20,10 @@ const Transactions = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [authToken]);
 
   return (
