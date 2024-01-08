@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import App from "../layouts/App";
 import Home from "../views/Home";
 import Register from "../views/auth/Register";
@@ -10,6 +10,7 @@ import ProtectedRoute from "./protectedRouter";
 import Transactions from "../views/dashborad/transactions/Transactions";
 import Analytics from "../views/dashborad/Analytics";
 import CreateTransaction from "../views/dashborad/transactions/CreateTransaction";
+import EditTransaction from "../views/dashborad/transactions/EditTransaction";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/user/transactions/create",
         element: <CreateTransaction />,
+      },
+      {
+        path: "/user/transactions/edit/:id",
+        element: <EditTransaction />,
       },
       {
         path: "/user/analytics",

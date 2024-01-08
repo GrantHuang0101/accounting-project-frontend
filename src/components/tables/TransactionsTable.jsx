@@ -40,7 +40,7 @@ const TransactionsTable = ({ transactions, fetchData }) => {
                 </Table.Cell>
                 <Table.Cell>
                   <Link
-                    to={``}
+                    to={`/user/transactions/edit/${transaction.transactionId}`}
                     className="font-semibold text-cyan-600 hover:underline dark:text-cyan-500 mr-5"
                   >
                     Edit

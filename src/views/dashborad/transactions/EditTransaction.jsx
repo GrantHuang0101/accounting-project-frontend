@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import BackButton from "../../../components/buttons/BackButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Datepicker, Label, Textarea } from "flowbite-react";
 import SingleEntryForm from "../../../components/forms/SingleEntryForm";
 import { useAuth } from "../../../components/AuthProvider";
@@ -8,19 +8,46 @@ import axios from "axios";
 import CreatePreviewTable from "../../../components/tables/CreatePreviewTable";
 import { format } from "date-fns";
 
-const CreateTransaction = () => {
+const EditTransaction = () => {
   const navigate = useNavigate();
+  const { id } = useParams(); // Get the transaction ID from the URL params
   const [accounts, setAccounts] = useState([]);
   const { authToken } = useAuth();
-  const [formRows, setFormRows] = useState([{ id: 1 }]);
+  const [formRows, setFormRows] = useState([]);
   const [previews, setPreviews] = useState([]);
-
-  const [selectedDate, setSelectedDate] = useState(
-    format(new Date(), "yyyy-MM-dd")
-  );
+  const [selectedDate, setSelectedDate] = useState("");
   const [description, setDescription] = useState("");
 
   useEffect(() => {
+    // Fetch the transaction details using the ID
+    axios
+      .get(`http://localhost:8080/transactions/${id}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+      .then((response) => {
+        const transactionRow = response.data;
+        const transaction = transactionRow[0];
+        setSelectedDate(
+          format(new Date(transaction.transactionDate), "yyyy-MM-dd")
+        );
+        setDescription(transaction.description);
+        // Add form row based on the fetched data
+
+        setFormRows(
+          transactionRow.map((vals, index) => {
+            return {
+              vals: vals,
+              rowId: index,
+            };
+          })
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     axios
       .get("http://localhost:8080/accounts", {
         headers: {
@@ -33,29 +60,34 @@ const CreateTransaction = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [authToken]);
+    const editEntries = formRows.map((row) => row.vals.transactionId);
+  }, [authToken, id]);
+
+  const editEntries = formRows
+    .map((row) => row.vals?.transactionId)
+    .filter((entry) => entry !== null);
 
   const addFormRow = () => {
-    setFormRows((prevRows) => [...prevRows, { id: Date.now() }]);
+    setFormRows((prevRows) => [...prevRows, { rowId: Date.now() }]);
   };
 
-  const handleDelete = (id) => {
-    setFormRows((prevRows) => prevRows.filter((row) => row.id !== id));
+  const handleDelete = (rowId) => {
+    setFormRows((prevRows) => prevRows.filter((row) => row.rowId !== rowId));
     setPreviews((prevPreviews) =>
-      prevPreviews.filter((preview) => preview.id !== id)
+      prevPreviews.filter((preview) => preview.rowId !== rowId)
     );
   };
 
-  const handlePreview = (id, values) => {
+  const handlePreview = (rowId, values) => {
     setPreviews((prevRows) => {
-      const existingIndex = prevRows.findIndex((row) => row.id === id);
+      const existingIndex = prevRows.findIndex((row) => row.rowId === rowId);
 
       if (existingIndex !== -1) {
         const updatedPreviews = [...prevRows];
-        updatedPreviews[existingIndex] = { id, values };
+        updatedPreviews[existingIndex] = { rowId, values };
         return updatedPreviews;
       } else {
-        return [...prevRows, { id, values }];
+        return [...prevRows, { rowId, values }];
       }
     });
   };
@@ -68,7 +100,7 @@ const CreateTransaction = () => {
     setDescription(event.target.value);
   };
 
-  const onCreate = async (previewData) => {
+  const handleEdit = async (previewData) => {
     const entryId = Date.now();
 
     for (const entry of previewData) {
@@ -88,12 +120,28 @@ const CreateTransaction = () => {
           },
         })
         .then((response) => {
-          console.log("Post response:", response.data);
+          console.log("Response:", response.data);
         })
         .catch((error) => {
           console.log(error);
         });
     }
+
+    for (const oldEntry of editEntries) {
+      await axios
+        .delete(`http://localhost:8080/transactions/${oldEntry}`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+        .then(() => {
+          console.log("Success");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
     navigate("/user/transactions");
   };
 
@@ -101,20 +149,20 @@ const CreateTransaction = () => {
     <div className="px-4 my-6 min-h-screen">
       <div className="flex flex-row items-center justify-between mb-6 w-full">
         <BackButton />
-        <div className="text-3xl font-bold mr-7">Journal Entry</div>
+        <div className="text-3xl font-bold mr-7">Edit Transaction</div>
         <div></div>
       </div>
 
       {formRows.map((row) => (
         <SingleEntryForm
-          key={row.id}
+          key={row.rowId}
           accounts={accounts}
-          onDelete={() => handleDelete(row.id)}
-          onPreview={(values) => handlePreview(row.id, values)}
+          initialValues={row.vals}
+          onDelete={() => handleDelete(row.rowId)}
+          onPreview={(values) => handlePreview(row.rowId, values)}
         />
       ))}
 
-      {/* Button to add a new form row */}
       <Button
         onClick={addFormRow}
         gradientDuoTone="purpleToPink"
@@ -158,10 +206,10 @@ const CreateTransaction = () => {
         <div className="flex text-2xl font-semibold mb-4 justify-center">
           Preview
         </div>
-        <CreatePreviewTable previews={previews} onCreate={onCreate} />
+        <CreatePreviewTable previews={previews} onCreate={handleEdit} />
       </div>
     </div>
   );
 };
 
-export default CreateTransaction;
+export default EditTransaction;

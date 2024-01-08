@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Button, Label, Select, TextInput, Textarea } from "flowbite-react";
 import { HiPlus, HiTrash } from "react-icons/hi";
 
-const SingleEntryForm = ({ accounts, onDelete, onPreview }) => {
+const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
   const [formValues, setFormValues] = useState({
-    selectAccount: { accountId: 1, accountName: "Cash" },
-    selectDc: "debit",
-    amount: "",
+    selectAccount: {
+      accountId: initialValues?.accountId || 1,
+      accountName: initialValues?.accountName || "Cash",
+    },
+    selectDc: initialValues?.dc || "debit",
+    amount: initialValues?.amount || "",
   });
 
   const handleChangeSelectAccount = (event) => {
@@ -51,11 +54,10 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview }) => {
               id="accountSelect"
               name="accountSelect"
               className="w-full rounded"
-              defaultValue={JSON.stringify(
-                formValues.selectAccount.accountName
-              )}
+              defaultValue={formValues.selectAccount.accountName}
               onChange={handleChangeSelectAccount}
             >
+              <option selected>{formValues.selectAccount.accountName}</option>
               {accounts.map((account) => (
                 <option
                   key={account.accountId}

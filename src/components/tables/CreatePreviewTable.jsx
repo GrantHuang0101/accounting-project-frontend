@@ -1,3 +1,4 @@
+import { interval } from "date-fns";
 import { Button, Table } from "flowbite-react";
 import React, { useState } from "react";
 
@@ -53,7 +54,7 @@ const CreatePreviewTable = ({ previews, onCreate }) => {
 
   const handleCreate = () => {
     if (integratedData.length === 0) {
-      alert("Add something to Preview");
+      alert("Add some entries to Preview");
       return;
     }
 
@@ -62,9 +63,9 @@ const CreatePreviewTable = ({ previews, onCreate }) => {
 
     integratedData.forEach((entry) => {
       if (entry.remainingType === "debit") {
-        totalDebit += entry.amount;
+        totalDebit += parseFloat(entry.amount);
       } else if (entry.remainingType === "credit") {
-        totalCredit += entry.amount;
+        totalCredit += parseFloat(entry.amount);
       }
     });
 
@@ -108,7 +109,13 @@ const CreatePreviewTable = ({ previews, onCreate }) => {
           </Table>
         </div>
       </div>
-      <Button onClick={handleCreate}>Create</Button>
+      <Button
+        gradientDuoTone="greenToBlue"
+        onClick={handleCreate}
+        className="font-bold"
+      >
+        Create
+      </Button>
     </div>
   );
 };
