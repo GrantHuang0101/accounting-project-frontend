@@ -69,7 +69,12 @@ const CreateTransaction = () => {
   };
 
   const onCreate = async (previewData) => {
-    const entryId = Date.now();
+    const entryId = Date.now(); // UUID?
+
+    if (previewData.length === 1) {
+      alert("You cannot create a transaction with 0 amount");
+      return;
+    }
 
     for (const entry of previewData) {
       const postData = {
@@ -91,10 +96,11 @@ const CreateTransaction = () => {
           console.log("Post response:", response.data);
         })
         .catch((error) => {
+          alert("Failed please try again");
           console.log(error);
         });
     }
-    navigate("/user/transactions");
+    navigate("/user/custom-transactions");
   };
 
   return (
@@ -114,7 +120,6 @@ const CreateTransaction = () => {
         />
       ))}
 
-      {/* Button to add a new form row */}
       <Button
         onClick={addFormRow}
         gradientDuoTone="purpleToPink"

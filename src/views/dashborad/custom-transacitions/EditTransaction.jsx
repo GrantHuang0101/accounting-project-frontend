@@ -139,7 +139,7 @@ const EditTransaction = () => {
         });
     }
 
-    navigate("/user/transactions");
+    navigate("/user/custom-transactions");
   };
 
   return (

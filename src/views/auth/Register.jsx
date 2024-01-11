@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/AuthProvider";
 
 const Register = () => {
-  const { login } = useAuth();
+  const { login, authToken, user } = useAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authToken && user) {
+      navigate("/user");
+    }
+  }, []);
 
   const handleRegister = async (event) => {
     event.preventDefault();

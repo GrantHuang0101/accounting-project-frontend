@@ -19,7 +19,7 @@ import {
   PowerIcon,
   DocumentTextIcon,
 } from "@heroicons/react/24/solid";
-import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthProvider";
 import Logout from "../../views/auth/Logout";
@@ -74,29 +74,17 @@ const Sidebar = () => {
           <AccordionBody className="py-1">
             <List className="p-0">
               <Link to="/user/analytics">
-                <ListItem>
-                  <ListItemPrefix>
-                    <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                  </ListItemPrefix>
-                  Analytics
-                </ListItem>
+                <ListItem>Analytics</ListItem>
               </Link>
-
-              <Link to="/user/transactions">
-                <ListItem>
-                  <ListItemPrefix>
-                    <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                  </ListItemPrefix>
-                  Transactions
-                </ListItem>
+              <Link to="/user/profit&loss-management">
+                <ListItem>P&L Management</ListItem>
               </Link>
-
-              <ListItem>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Projects
-              </ListItem>
+              <Link to="/user/quick-add-transactions">
+                <ListItem>Transaction - Quick Add</ListItem>
+              </Link>
+              <Link to="/user/custom-transactions">
+                <ListItem>Transaction - Customized</ListItem>
+              </Link>
             </List>
           </AccordionBody>
         </Accordion>
@@ -126,24 +114,9 @@ const Sidebar = () => {
           </ListItem>
           <AccordionBody className="py-1">
             <List className="p-0">
-              <ListItem>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Balance Sheet
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Income Statement
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Statement of Cash Flow
-              </ListItem>
+              <ListItem>Balance Sheet</ListItem>
+              <ListItem>Income Statement</ListItem>
+              <ListItem>Statement of Cash Flow</ListItem>
             </List>
           </AccordionBody>
         </Accordion>

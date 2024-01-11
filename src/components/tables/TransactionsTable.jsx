@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import CreateTransactionButton from "../buttons/createTransactionButton";
 
-const TransactionsTable = ({ transactions, fetchData }) => {
-  const handleDelete = () => {};
+const TransactionsTable = ({ transactions }) => {
   return (
     <div className="px-4 my-12">
       <div className="flex flex-row items-center justify-between mb-8 w-full">
@@ -40,17 +39,17 @@ const TransactionsTable = ({ transactions, fetchData }) => {
                 </Table.Cell>
                 <Table.Cell>
                   <Link
-                    to={`/user/transactions/edit/${transaction.transactionId}`}
+                    to={`/user/custom-transactions/edit/${transaction.transactionId}`}
                     className="font-semibold text-cyan-600 hover:underline dark:text-cyan-500 mr-5"
                   >
                     Edit
                   </Link>
-                  <button
-                    onClick={handleDelete}
+                  <Link
+                    to={`/user/custom-transactions/delete/${transaction.transactionId}`}
                     className="font-semibold text-red-600 hover:underline dark:text-red-500 mr-5"
                   >
                     Delete
-                  </button>
+                  </Link>
                 </Table.Cell>
               </Table.Row>
             </Table.Body>

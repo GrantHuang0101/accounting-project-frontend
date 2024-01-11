@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../components/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, authToken, user } = useAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authToken && user) {
+      navigate("/user");
+    }
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -73,8 +79,8 @@ const Login = () => {
                 <p>
                   If you don't have an account, please{" "}
                   <Link to="/register" className="text-blue-600 underline">
-                    Register{" "}
-                  </Link>
+                    Register
+                  </Link>{" "}
                   here
                 </p>
                 <div className="relative">

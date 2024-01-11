@@ -1,16 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../layouts/App";
-import Home from "../views/Home";
+import Home from "../views/landing/Home";
 import Register from "../views/auth/Register";
 import Login from "../views/auth/Login";
 import Logout from "../views/auth/Logout";
 import DashBoardLayout from "../layouts/DashboardLayout";
 import Dashboard from "../views/dashborad/Dashboard";
 import ProtectedRoute from "./protectedRouter";
-import Transactions from "../views/dashborad/transactions/Transactions";
-import Analytics from "../views/dashborad/Analytics";
-import CreateTransaction from "../views/dashborad/transactions/CreateTransaction";
-import EditTransaction from "../views/dashborad/transactions/EditTransaction";
+import Transactions from "../views/dashborad/custom-transacitions/Transactions";
+import Analytics from "../views/dashborad/analytics/Analytics";
+import CreateTransaction from "../views/dashborad/custom-transacitions/CreateTransaction";
+import EditTransaction from "../views/dashborad/custom-transacitions/EditTransaction";
+import DeleteTransaction from "../views/dashborad/custom-transacitions/DeleteTransaction";
+import Introduction from "../views/landing/Introduction";
+import QuickAdd from "../views/dashborad/quick-add/QuickAdd";
+import PLManagement from "../views/dashborad/profit-loss-management/PLManagement";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/introduction",
+        element: <Introduction />,
       },
     ],
   },
@@ -32,24 +40,39 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+        path: "/user/analytics",
+        element: <Analytics />,
+      },
+
+      {
+        path: "/user/quick-add-transactions",
+        element: <QuickAdd />,
+      },
+
+      {
         path: "/user",
         element: <Dashboard />,
       },
       {
-        path: "/user/transactions",
+        path: "/user/custom-transactions",
         element: <Transactions />,
       },
       {
-        path: "/user/transactions/create",
+        path: "/user/custom-transactions/create",
         element: <CreateTransaction />,
       },
       {
-        path: "/user/transactions/edit/:id",
+        path: "/user/custom-transactions/edit/:id",
         element: <EditTransaction />,
       },
       {
-        path: "/user/analytics",
-        element: <Analytics />,
+        path: "/user/custom-transactions/delete/:id",
+        element: <DeleteTransaction />,
+      },
+
+      {
+        path: "/user/profit&loss-management",
+        element: <PLManagement />,
       },
     ],
   },
