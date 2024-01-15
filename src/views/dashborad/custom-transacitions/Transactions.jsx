@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../../components/AuthProvider";
 import TransactionsTable from "../../../components/tables/TransactionsTable";
-import { Carousel } from "flowbite-react";
+import GeneralCarousel from "../../../components/carousel/GeneralCarousel";
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
@@ -30,24 +30,7 @@ const Transactions = () => {
   return (
     <div>
       <div>
-        <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
-          <Carousel
-            onSlideChange={(index) => console.log("onSlideChange()", index)}
-          >
-            <div className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white">
-              <div>Asset</div>
-              <div>Liability</div>
-              <div>Equity</div>
-            </div>
-            <div className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white">
-              <div>Income</div>
-              <div>Expense</div>
-            </div>
-            <div className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white">
-              Slide 3
-            </div>
-          </Carousel>
-        </div>
+        <GeneralCarousel transactions={transactions} />
       </div>
       <div>
         <TransactionsTable transactions={transactions} />

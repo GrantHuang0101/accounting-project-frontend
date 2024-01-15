@@ -10,6 +10,8 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
     },
     selectDc: initialValues?.dc || "debit",
     amount: initialValues?.amount || "",
+    transactionId: initialValues?.transactionId || -1,
+    entryId: initialValues?.entryId || -1,
   });
 
   const handleChangeSelectAccount = (event) => {

@@ -20,7 +20,8 @@ const CreatePreviewTable = ({ previews, onCreate }) => {
 
       const combinedAmountandId = entries.reduce(
         (result, entry) => {
-          const { selectAccount, amount, selectDc } = entry.values;
+          const { selectAccount, amount, selectDc, transactionId, entryId } =
+            entry.values;
 
           const numericAmount = parseFloat(amount);
 
@@ -31,9 +32,22 @@ const CreatePreviewTable = ({ previews, onCreate }) => {
           }
           result.accountId = selectAccount.accountId;
 
+          const NEW_ENTRYID = -1;
+          if (transactionId !== NEW_ENTRYID) {
+            result.transactionId = transactionId;
+          }
+
+          result.entryId = entryId;
+
           return result;
         },
-        { debit: 0, credit: 0, accountId: 1 }
+        {
+          debit: 0,
+          credit: 0,
+          accountId: 1,
+          transactionId: -1,
+          entryId: -1,
+        }
       );
 
       const offsetAmount =
@@ -43,11 +57,16 @@ const CreatePreviewTable = ({ previews, onCreate }) => {
 
       const accountId = combinedAmountandId.accountId;
 
+      const transactionId = combinedAmountandId.transactionId;
+      const entryId = combinedAmountandId.entryId;
+
       return {
         accountId,
         accountName,
         remainingType,
         amount: Math.abs(offsetAmount).toFixed(2),
+        transactionId,
+        entryId,
       };
     }
   );
@@ -55,6 +74,19 @@ const CreatePreviewTable = ({ previews, onCreate }) => {
   const handleCreate = () => {
     if (integratedData.length === 0) {
       alert("Add some entries to Preview");
+      return;
+    }
+
+    const CHECK_AMOUNT = "0.00";
+    const checkData = integratedData.map((entry) => {
+      if (entry.amount === CHECK_AMOUNT) {
+        alert("You cannot create a transaction with 0 amount");
+        return null;
+      }
+      return entry;
+    });
+
+    if (checkData.includes(null)) {
       return;
     }
 

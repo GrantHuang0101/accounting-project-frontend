@@ -28,23 +28,21 @@ const DeleteTransaction = () => {
   }, [authToken]);
 
   const handleDelete = async () => {
-    for (const row of deleteRows) {
-      const id = row.transactionId;
-      await axios
-        .delete(`http://localhost:8080/transactions/${id}`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        })
-        .then(() => {
-          console.log(`Transaction with ID ${id} deleted`);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    try {
+      const transactionIds = deleteRows.map((row) => row.transactionId);
+
+      await axios.delete("http://localhost:8080/transactions", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        data: { transactionIds },
+      });
+
+      alert("Delete Successfully");
+      navigate("/user/custom-transactions");
+    } catch (error) {
+      console.error(error);
     }
-    alert("Delete Successfully");
-    navigate("/user/custom-transactions");
   };
 
   const handleCancel = () => {

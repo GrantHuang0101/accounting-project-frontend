@@ -71,36 +71,27 @@ const CreateTransaction = () => {
   const onCreate = async (previewData) => {
     const entryId = Date.now(); // UUID?
 
-    if (previewData.length === 1) {
-      alert("You cannot create a transaction with 0 amount");
-      return;
-    }
+    const transactionsData = previewData.map((entry) => ({
+      accountId: entry.accountId,
+      amount: entry.amount,
+      transactionDate: selectedDate,
+      description: description,
+      dc: entry.remainingType,
+      entryId: entryId,
+    }));
 
-    for (const entry of previewData) {
-      const postData = {
-        accountId: entry.accountId,
-        amount: entry.amount,
-        transactionDate: selectedDate,
-        description: description,
-        dc: entry.remainingType,
-        entryId: entryId,
-      };
-
-      await axios
-        .post("http://localhost:8080/transactions", postData, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        })
-        .then((response) => {
-          console.log("Post response:", response.data);
-        })
-        .catch((error) => {
-          alert("Failed please try again");
-          console.log(error);
-        });
+    try {
+      await axios.post("http://localhost:8080/transactions", transactionsData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      console.log("Transactions created");
+      navigate("/user/custom-transactions");
+    } catch (error) {
+      alert("Failed, please try again");
+      console.error(error);
     }
-    navigate("/user/custom-transactions");
   };
 
   return (
