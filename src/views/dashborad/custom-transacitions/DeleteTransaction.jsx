@@ -5,6 +5,7 @@ import { Button, Card, Table } from "flowbite-react";
 import { useAuth } from "../../../components/AuthProvider";
 import axios from "axios";
 import { format } from "date-fns";
+import API_BASE_URL from "../../../../config";
 
 const DeleteTransaction = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const DeleteTransaction = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/transactions/${id}`, {
+      .get(`${API_BASE_URL}/transactions/${id}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -31,7 +32,7 @@ const DeleteTransaction = () => {
     try {
       const transactionIds = deleteRows.map((row) => row.transactionId);
 
-      await axios.delete("http://localhost:8080/transactions", {
+      await axios.delete(`${API_BASE_URL}/transactions`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },

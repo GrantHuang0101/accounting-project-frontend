@@ -7,6 +7,7 @@ import { useAuth } from "../../../components/AuthProvider";
 import axios from "axios";
 import CreatePreviewTable from "../../../components/tables/CreatePreviewTable";
 import { format } from "date-fns";
+import API_BASE_URL from "../../../../config";
 
 const CreateTransaction = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const CreateTransaction = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/accounts", {
+      .get(`${API_BASE_URL}/accounts`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -81,7 +82,7 @@ const CreateTransaction = () => {
     }));
 
     try {
-      await axios.post("http://localhost:8080/transactions", transactionsData, {
+      await axios.post(`${API_BASE_URL}/transactions`, transactionsData, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -111,11 +112,7 @@ const CreateTransaction = () => {
         />
       ))}
 
-      <Button
-        onClick={addFormRow}
-        gradientDuoTone="purpleToPink"
-        className="px-2 py-1 mb-5 font-semibold"
-      >
+      <Button onClick={addFormRow} outline className="mb-5 font-regular">
         + Add New Row +
       </Button>
 
@@ -151,9 +148,12 @@ const CreateTransaction = () => {
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="flex text-2xl font-semibold mb-4 justify-center">
+        <div className="flex text-2xl font-semibold justify-center items-baseline">
           Preview
         </div>
+        <p className="text-sm text-center text-gray-400 mb-2">
+          Please add entries to Preview first then Confirm
+        </p>
         <CreatePreviewTable previews={previews} onCreate={onCreate} />
       </div>
     </div>

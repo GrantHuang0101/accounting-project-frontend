@@ -146,7 +146,7 @@ const CreatePreviewTable = ({ previews, onCreate }) => {
         onClick={handleCreate}
         className="font-bold"
       >
-        Create
+        Confirm
       </Button>
     </div>
   );

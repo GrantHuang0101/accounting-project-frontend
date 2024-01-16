@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../../../components/AuthProvider";
 import TransactionsTable from "../../../components/tables/TransactionsTable";
 import GeneralCarousel from "../../../components/carousel/GeneralCarousel";
+import API_BASE_URL from "../../../../config";
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
@@ -10,7 +11,7 @@ const Transactions = () => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:8080/transactions/user", {
+      .get(`${API_BASE_URL}/transactions/user`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },

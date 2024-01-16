@@ -7,6 +7,7 @@ import { useAuth } from "../../../components/AuthProvider";
 import axios from "axios";
 import CreatePreviewTable from "../../../components/tables/CreatePreviewTable";
 import { format } from "date-fns";
+import API_BASE_URL from "../../../../config";
 
 const EditTransaction = () => {
   const navigate = useNavigate();
@@ -21,9 +22,8 @@ const EditTransaction = () => {
   const [entryId, setEntryId] = useState();
 
   useEffect(() => {
-    // Fetch the transaction details using the ID
     axios
-      .get(`http://localhost:8080/transactions/${id}`, {
+      .get(`${API_BASE_URL}/transactions/${id}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -51,7 +51,7 @@ const EditTransaction = () => {
       });
 
     axios
-      .get("http://localhost:8080/accounts", {
+      .get(`${API_BASE_URL}/accounts`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -121,7 +121,7 @@ const EditTransaction = () => {
     console.log(patchData);
 
     try {
-      await axios.patch("http://localhost:8080/transactions", patchData, {
+      await axios.patch(`${API_BASE_URL}/transactions`, patchData, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -193,9 +193,12 @@ const EditTransaction = () => {
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="flex text-2xl font-semibold mb-4 justify-center">
+        <div className="flex text-2xl font-semibold justify-center items-baseline">
           Preview
         </div>
+        <p className="text-sm text-center text-gray-400 mb-2">
+          Please add entries to Preview first then Confirm
+        </p>
         <CreatePreviewTable previews={previews} onCreate={handleEdit} />
       </div>
     </div>
