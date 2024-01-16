@@ -1,6 +1,5 @@
-import { interval } from "date-fns";
 import { Button, Table } from "flowbite-react";
-import React, { useState } from "react";
+import React from "react";
 
 const CreatePreviewTable = ({ previews, onCreate }) => {
   const groupedByAccountName = previews.reduce((result, entry) => {
