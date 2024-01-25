@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../../../components/AuthProvider";
 import GeneralCarousel from "../../../components/carousel/GeneralCarousel";
 import API_BASE_URL from "../../../../config";
+import CashFlowCard from "../../../components/cards/CashFlowCard";
 
 const Analytics = () => {
   const [transactions, setTransactions] = useState([]);
@@ -32,7 +33,9 @@ const Analytics = () => {
       <div>
         <GeneralCarousel transactions={transactions} />
       </div>
-      <div>Cash Flow</div>
+      <div>
+        <CashFlowCard transactions={transactions} />
+      </div>
       <div>Income Expense</div>
       <div>Inventory</div>
       <div>NI</div>

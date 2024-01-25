@@ -16,12 +16,10 @@ const TransactionsTable = ({ transactions }) => {
           <Table.Head>
             <Table.HeadCell>Date</Table.HeadCell>
             <Table.HeadCell>Account</Table.HeadCell>
-            <Table.HeadCell>Debit Amount</Table.HeadCell>
-            <Table.HeadCell>Credit Amount</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>
-              <span>Manage</span>
-            </Table.HeadCell>
+            <Table.HeadCell className="text-end">Debit Amount</Table.HeadCell>
+            <Table.HeadCell className="text-end">Credit Amount</Table.HeadCell>
+            <Table.HeadCell className="text-end">Description</Table.HeadCell>
+            <Table.HeadCell className="text-center">Manage</Table.HeadCell>
           </Table.Head>
           {transactions.map((transaction, index) => (
             <Table.Body className="divide-y" key={transaction.transactionId}>
@@ -32,16 +30,16 @@ const TransactionsTable = ({ transactions }) => {
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {transaction.accountName}
                 </Table.Cell>
-                <Table.Cell className="font-semibold">
+                <Table.Cell className="font-semibold text-end">
                   {transaction.dc === "debit" ? transaction.amount : null}
                 </Table.Cell>
-                <Table.Cell className="font-semibold">
+                <Table.Cell className="font-semibold text-end">
                   {transaction.dc === "credit" ? transaction.amount : null}
                 </Table.Cell>
-                <Table.Cell className="font-semibold">
+                <Table.Cell className="font-semibold text-end">
                   {transaction.description}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell className="text-center">
                   <Link
                     to={`/user/custom-transactions/edit/${transaction.transactionId}`}
                     className="font-semibold text-cyan-600 hover:underline dark:text-cyan-500 mr-5"
@@ -50,7 +48,7 @@ const TransactionsTable = ({ transactions }) => {
                   </Link>
                   <Link
                     to={`/user/custom-transactions/delete/${transaction.transactionId}`}
-                    className="font-semibold text-red-600 hover:underline dark:text-red-500 mr-5"
+                    className="font-semibold text-red-600 hover:underline dark:text-red-500"
                   >
                     Delete
                   </Link>

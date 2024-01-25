@@ -6,7 +6,7 @@ const DashBoardLayout = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-grow overflow-y-auto p-4 pl-80">
+      <div className="flex-grow overflow-y-auto pl-80">
         <Outlet />
       </div>
     </div>
