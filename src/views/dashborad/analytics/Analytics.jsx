@@ -33,7 +33,7 @@ const Analytics = () => {
       <div>
         <GeneralCarousel transactions={transactions} />
       </div>
-      <div>
+      <div className="w-1/2">
         <CashFlowCard transactions={transactions} />
       </div>
       <div>Income Expense</div>

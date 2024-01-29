@@ -3,9 +3,11 @@ import { Card, Table } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MonthRangeDropdown from "../dropdowns/MonthRangeDropdown";
+import FilterOptionDropdown from "../dropdowns/FilterOptionDropdown";
 
-const CashFlowCard = ({ transactions }) => {
+const CashFlowTable = ({ transactions }) => {
   const [monthRange, setMonthRange] = useState(1);
+  const [filterOption, setFilterOption] = useState("All");
   const [cashTransactions, setCashTransactions] = useState([]);
   const [inFlowAmount, setInFlowAmount] = useState(0);
   const [outFlowAmount, setOutFlowAmount] = useState(0);
@@ -22,8 +24,15 @@ const CashFlowCard = ({ transactions }) => {
         (transaction) =>
           new Date(transaction.transactionDate) >= getCutoffDate()
       )
-      .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount))
-      .slice(0, 5);
+      .filter((transaction) => {
+        if (filterOption === "Inflow") {
+          return transaction.dc === "debit";
+        } else if (filterOption === "Outflow") {
+          return transaction.dc === "credit";
+        }
+        return true;
+      })
+      .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
 
     const debitTransactions = cashTransactions.filter(
       (transaction) => transaction.dc === "debit"
@@ -44,32 +53,32 @@ const CashFlowCard = ({ transactions }) => {
     setCashTransactions(cashTransactions);
     setInFlowAmount(debitSum);
     setOutFlowAmount(creditSum);
-  }, [monthRange, transactions]);
+  }, [monthRange, transactions, filterOption]);
 
   return (
     <div className="flex py-3 px-3">
       <Card className="w-full">
-        <div className="mb-4 flex items-center justify-between">
-          <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-            Top Cash Transactions
-          </h5>
-          <div>
+        <div className="mb-4 flex items-baseline justify-center">
+          <h2 className="text-3xl font-bold leading-none text-gray-900 dark:text-white px-4">
+            Cash Transactions
+          </h2>
+          <div className="text-xl">
             <MonthRangeDropdown
               monthRange={monthRange}
               setMonthRange={setMonthRange}
             />
           </div>
-          <Link
-            to="/user/analytics/cash-flow"
-            className="text-sm font-semibold text-cyan-600 hover:underline dark:text-cyan-500"
-          >
-            View all
-          </Link>
+          <div className="text-xl">
+            <FilterOptionDropdown
+              filterOption={filterOption}
+              setFilterOption={setFilterOption}
+            />
+          </div>
         </div>
-        <div className="flex flex-row px-3 justify-between">
+        <div className="flex flex-row px-3 justify-evenly">
           <div className="flex flex-col items-center">
             <h5 className="text-sm font-semibold text-gray-500">Cash Inflow</h5>
-            <h3 className="text-2xl text-green-500 font-regular">
+            <h3 className="text-3xl text-green-500 font-regular">
               {"+" + inFlowAmount.toFixed(2)}
             </h3>
           </div>
@@ -77,20 +86,20 @@ const CashFlowCard = ({ transactions }) => {
             <h5 className="text-sm font-semibold text-gray-500">
               Cash Outflow
             </h5>
-            <h3 className="text-2xl text-red-500 font-regular">
+            <h3 className="text-3xl text-red-500 font-regular">
               -{outFlowAmount.toFixed(2)}
             </h3>
           </div>
           <div className="flex flex-col items-center">
             <h5 className="text-sm font-semibold text-black">Net Cash Flow</h5>
-            <h3 className="text-2xl">
+            <h3 className="text-3xl">
               {inFlowAmount - outFlowAmount >= 0 ? (
                 <p className="text-green-500 font-semibold">
                   +{(inFlowAmount - outFlowAmount).toFixed(2)}
                 </p>
               ) : (
                 <p className="text-red-500 font-semibold">
-                  {-(inFlowAmount - outFlowAmount).toFixed(2)}
+                  {(inFlowAmount - outFlowAmount).toFixed(2)}
                 </p>
               )}
             </h3>
@@ -99,14 +108,15 @@ const CashFlowCard = ({ transactions }) => {
         <div className="w-full">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Date</Table.HeadCell>
+              <Table.HeadCell className="text-center">Date</Table.HeadCell>
               <Table.HeadCell className="text-end">Amount</Table.HeadCell>
               <Table.HeadCell className="text-end">Description</Table.HeadCell>
+              <Table.HeadCell className="text-center">Manage</Table.HeadCell>
             </Table.Head>
             {cashTransactions.map((transaction, index) => (
               <Table.Body className="divide-y" key={transaction.transactionId}>
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white text-center">
                     {format(
                       new Date(transaction.transactionDate),
                       "yyyy-MM-dd"
@@ -120,6 +130,14 @@ const CashFlowCard = ({ transactions }) => {
                   <Table.Cell className="font-semibold text-end">
                     {transaction.description}
                   </Table.Cell>
+                  <Table.Cell className="text-center">
+                    <Link
+                      to={`/user/analytics/cash-flow/${transaction.transactionId}`}
+                      className="font-semibold text-cyan-600 hover:underline dark:text-red-500"
+                    >
+                      See Details
+                    </Link>
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             ))}
@@ -130,4 +148,4 @@ const CashFlowCard = ({ transactions }) => {
   );
 };
 
-export default CashFlowCard;
+export default CashFlowTable;
