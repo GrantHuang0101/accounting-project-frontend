@@ -20,6 +20,7 @@ const GeneralCarousel = ({ transactions }) => {
     return result;
   }, {});
 
+  console.log(groupedTransactions);
   const assetAccount = groupedTransactions["Asset"]?.accounts || {};
   const assetTotal = groupedTransactions["Asset"]?.total || 0;
 
@@ -81,6 +82,7 @@ const GeneralCarousel = ({ transactions }) => {
       label: accountName,
     };
   });
+  console.log(assetTotal);
 
   return (
     <div className="h-30 sm:h-42 xl:h-50 2xl:h-60 w-6/7 py-3 px-3">

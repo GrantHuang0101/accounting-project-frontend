@@ -1,5 +1,5 @@
+import { PieChart } from "@mui/x-charts";
 import React from "react";
-import { PieChart } from "@mui/x-charts/PieChart";
 
 const PieChartComponent = ({ title, total, data }) => {
   return (
