@@ -4,6 +4,7 @@ import { useAuth } from "../../../components/AuthProvider";
 import GeneralCarousel from "../../../components/carousel/GeneralCarousel";
 import API_BASE_URL from "../../../../config";
 import CashFlowCard from "../../../components/cards/CashFlowCard";
+import CashFlowBarChart from "../../../components/charts/CashFlowBarChart";
 
 const Analytics = () => {
   const [transactions, setTransactions] = useState([]);
@@ -33,9 +34,15 @@ const Analytics = () => {
       <div>
         <GeneralCarousel transactions={transactions} />
       </div>
-      <div className="w-1/2">
-        <CashFlowCard transactions={transactions} />
+      <div className="flex flex-row">
+        <div className="w-1/2">
+          <CashFlowCard transactions={transactions} />
+        </div>
+        <div className="w-1/2">
+          <CashFlowBarChart transactions={transactions} />
+        </div>
       </div>
+
       <div>Income Expense</div>
       <div>Inventory</div>
       <div>NI</div>

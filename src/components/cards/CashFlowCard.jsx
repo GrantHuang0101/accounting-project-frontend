@@ -5,22 +5,30 @@ import { Link } from "react-router-dom";
 import MonthRangeDropdown from "../dropdowns/MonthRangeDropdown";
 
 const CashFlowCard = ({ transactions }) => {
-  const [monthRange, setMonthRange] = useState(1);
+  const [monthRange, setMonthRange] = useState(0);
   const [cashTransactions, setCashTransactions] = useState([]);
   const [inFlowAmount, setInFlowAmount] = useState(0);
   const [outFlowAmount, setOutFlowAmount] = useState(0);
 
   const getCutoffDate = () => {
-    const currentDate = new Date();
-    return new Date(currentDate.setMonth(currentDate.getMonth() - monthRange));
+    if (monthRange === 0) {
+      // If monthRange is 0, return null.
+      // Implicitly get all transactions
+      return null;
+    } else {
+      const currentDate = new Date();
+      return new Date(
+        currentDate.setMonth(currentDate.getMonth() - monthRange)
+      );
+    }
   };
 
   useEffect(() => {
+    const cutoffDate = getCutoffDate();
     const cashTransactions = transactions
       .filter((transaction) => transaction.accountName === "Cash")
-      .filter(
-        (transaction) =>
-          new Date(transaction.transactionDate) >= getCutoffDate()
+      .filter((transaction) =>
+        cutoffDate ? new Date(transaction.transactionDate) >= cutoffDate : true
       )
       .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount))
       .slice(0, 5);
