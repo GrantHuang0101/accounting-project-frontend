@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BackButton from "../../../components/buttons/BackButton";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Card, Table } from "flowbite-react";
+import { Card, Table } from "flowbite-react";
 import { useAuth } from "../../../components/AuthProvider";
 import axios from "axios";
 import { format } from "date-fns";
@@ -9,7 +9,6 @@ import API_BASE_URL from "../../../../config";
 
 const CashTransactionDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { authToken } = useAuth();
   const [deleteRows, setDeleteRows] = useState([]);
 
