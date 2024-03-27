@@ -18,6 +18,7 @@ const TransactionsTable = ({ transactions }) => {
             <Table.HeadCell>Account</Table.HeadCell>
             <Table.HeadCell>Debit Amount</Table.HeadCell>
             <Table.HeadCell>Credit Amount</Table.HeadCell>
+            <Table.HeadCell>Description</Table.HeadCell>
             <Table.HeadCell>
               <span>Manage</span>
             </Table.HeadCell>
@@ -36,6 +37,9 @@ const TransactionsTable = ({ transactions }) => {
                 </Table.Cell>
                 <Table.Cell className="font-semibold">
                   {transaction.dc === "credit" ? transaction.amount : null}
+                </Table.Cell>
+                <Table.Cell className="font-semibold">
+                  {transaction.description}
                 </Table.Cell>
                 <Table.Cell>
                   <Link

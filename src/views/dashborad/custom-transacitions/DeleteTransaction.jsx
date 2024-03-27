@@ -5,6 +5,7 @@ import { Button, Card, Table } from "flowbite-react";
 import { useAuth } from "../../../components/AuthProvider";
 import axios from "axios";
 import { format } from "date-fns";
+import API_BASE_URL from "../../../../config";
 
 const DeleteTransaction = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const DeleteTransaction = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/transactions/${id}`, {
+      .get(`${API_BASE_URL}/transactions/${id}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -28,23 +29,21 @@ const DeleteTransaction = () => {
   }, [authToken]);
 
   const handleDelete = async () => {
-    for (const row of deleteRows) {
-      const id = row.transactionId;
-      await axios
-        .delete(`http://localhost:8080/transactions/${id}`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        })
-        .then(() => {
-          console.log(`Transaction with ID ${id} deleted`);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    try {
+      const transactionIds = deleteRows.map((row) => row.transactionId);
+
+      await axios.delete(`${API_BASE_URL}/transactions`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        data: { transactionIds },
+      });
+
+      alert("Delete Successfully");
+      navigate("/user/custom-transactions");
+    } catch (error) {
+      console.error(error);
     }
-    alert("Delete Successfully");
-    navigate("/user/custom-transactions");
   };
 
   const handleCancel = () => {

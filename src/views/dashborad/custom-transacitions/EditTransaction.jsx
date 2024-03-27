@@ -7,6 +7,7 @@ import { useAuth } from "../../../components/AuthProvider";
 import axios from "axios";
 import CreatePreviewTable from "../../../components/tables/CreatePreviewTable";
 import { format } from "date-fns";
+import API_BASE_URL from "../../../../config";
 
 const EditTransaction = () => {
   const navigate = useNavigate();
@@ -17,12 +18,12 @@ const EditTransaction = () => {
   const [previews, setPreviews] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [description, setDescription] = useState("");
-  const [editEntries, setEditEntries] = useState([]);
+  const [deleteEntries, setDeleteEntries] = useState([]);
+  const [entryId, setEntryId] = useState();
 
   useEffect(() => {
-    // Fetch the transaction details using the ID
     axios
-      .get(`http://localhost:8080/transactions/${id}`, {
+      .get(`${API_BASE_URL}/transactions/${id}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -34,8 +35,7 @@ const EditTransaction = () => {
           format(new Date(transaction.transactionDate), "yyyy-MM-dd")
         );
         setDescription(transaction.description);
-
-        setEditEntries(() => transactionRow.map((row) => row.transactionId));
+        setEntryId(transaction.entryId);
 
         setFormRows(
           transactionRow.map((vals, index) => {
@@ -51,7 +51,7 @@ const EditTransaction = () => {
       });
 
     axios
-      .get("http://localhost:8080/accounts", {
+      .get(`${API_BASE_URL}/accounts`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -68,18 +68,23 @@ const EditTransaction = () => {
     setFormRows((prevRows) => [...prevRows, { rowId: Date.now() }]);
   };
 
-  const handleDelete = (rowId) => {
+  const handleDelete = (rowId, rowValues) => {
     setFormRows((prevRows) => prevRows.filter((row) => row.rowId !== rowId));
     setPreviews((prevPreviews) =>
       prevPreviews.filter((preview) => preview.rowId !== rowId)
     );
+
+    const rowTransactionId = rowValues.transactionId || null;
+    if (rowTransactionId !== null) {
+      setDeleteEntries((prevDelete) => [...prevDelete, rowTransactionId]);
+    }
   };
 
   const handlePreview = (rowId, values) => {
     setPreviews((prevRows) => {
       const existingIndex = prevRows.findIndex((row) => row.rowId === rowId);
-
-      if (existingIndex !== -1) {
+      const ROW_NOT_FOUND = -1;
+      if (existingIndex !== ROW_NOT_FOUND) {
         const updatedPreviews = [...prevRows];
         updatedPreviews[existingIndex] = { rowId, values };
         return updatedPreviews;
@@ -98,48 +103,36 @@ const EditTransaction = () => {
   };
 
   const handleEdit = async (previewData) => {
-    const entryId = Date.now();
+    const updateAndCreateData = previewData.map((entry) => ({
+      transactionId: entry.transactionId,
+      accountId: entry.accountId,
+      amount: entry.amount,
+      transactionDate: selectedDate,
+      description: description,
+      dc: entry.remainingType,
+      entryId: entryId,
+    }));
 
-    for (const entry of previewData) {
-      const postData = {
-        accountId: entry.accountId,
-        amount: entry.amount,
-        transactionDate: selectedDate,
-        description: description,
-        dc: entry.remainingType,
-        entryId: entryId,
-      };
+    const patchData = {
+      patch: updateAndCreateData,
+      deleted: deleteEntries,
+    };
 
-      await axios
-        .post("http://localhost:8080/transactions", postData, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        })
-        .then((response) => {
-          console.log("Response:", response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    console.log(patchData);
+
+    try {
+      await axios.patch(`${API_BASE_URL}/transactions`, patchData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      console.log("Transactions edited");
+      navigate("/user/custom-transactions");
+    } catch (error) {
+      alert("Failed, please try again.");
+      console.error(error);
     }
-
-    for (const oldEntry of editEntries) {
-      await axios
-        .delete(`http://localhost:8080/transactions/${oldEntry}`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        })
-        .then(() => {
-          console.log("Success");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-
-    navigate("/user/custom-transactions");
   };
 
   return (
@@ -155,7 +148,7 @@ const EditTransaction = () => {
           key={row.rowId}
           accounts={accounts}
           initialValues={row.vals}
-          onDelete={() => handleDelete(row.rowId)}
+          onDelete={() => handleDelete(row.rowId, row.vals)}
           onPreview={(values) => handlePreview(row.rowId, values)}
         />
       ))}
@@ -200,9 +193,12 @@ const EditTransaction = () => {
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="flex text-2xl font-semibold mb-4 justify-center">
+        <div className="flex text-2xl font-semibold justify-center items-baseline">
           Preview
         </div>
+        <p className="text-sm text-center text-gray-400 mb-2">
+          Please add entries to Preview first then Confirm
+        </p>
         <CreatePreviewTable previews={previews} onCreate={handleEdit} />
       </div>
     </div>

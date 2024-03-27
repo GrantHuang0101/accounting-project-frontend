@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../components/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
+import API_BASE_URL from "../../../config";
 
 const Login = () => {
   const { login, authToken, user } = useAuth();
@@ -19,7 +20,7 @@ const Login = () => {
     const username = form.username.value;
     const password = form.password.value;
     try {
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

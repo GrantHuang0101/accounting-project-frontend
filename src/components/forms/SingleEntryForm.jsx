@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Label, Select, TextInput, Textarea } from "flowbite-react";
-import { HiPlus, HiTrash } from "react-icons/hi";
+import { HiPlus, HiMinus } from "react-icons/hi";
 
 const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
   const [formValues, setFormValues] = useState({
@@ -10,7 +10,10 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
     },
     selectDc: initialValues?.dc || "debit",
     amount: initialValues?.amount || "",
+    transactionId: initialValues?.transactionId || -1,
+    entryId: initialValues?.entryId || -1,
   });
+  const [previewClicked, setPreviewClicked] = useState(false);
 
   const handleChangeSelectAccount = (event) => {
     const selectedAccount = JSON.parse(event.target.value);
@@ -39,6 +42,7 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
       alert("Amount cannot be null");
       return;
     }
+    setPreviewClicked(true);
     onPreview(formValues);
   };
 
@@ -56,6 +60,7 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
               className="w-full rounded"
               defaultValue={formValues.selectAccount.accountName}
               onChange={handleChangeSelectAccount}
+              disabled={previewClicked}
             >
               <option selected>{formValues.selectAccount.accountName}</option>
               {accounts.map((account) => (
@@ -81,6 +86,7 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
               className="w-full rounded"
               value={formValues.selectDc}
               onChange={handleChangeSelectDc}
+              disabled={previewClicked}
             >
               <option value="debit">Debit</option>
               <option value="credit">Credit</option>
@@ -98,6 +104,7 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
               value={formValues.amount}
               onChange={handleChangeAmount}
               required
+              disabled={previewClicked}
             />
           </div>
           <div className="flex items-end">
@@ -107,6 +114,7 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
               gradientDuoTone="cyanToBlue"
               size="sm"
               className="mr-2"
+              disabled={previewClicked}
             >
               <HiPlus className="" />
               Preview
@@ -118,8 +126,8 @@ const SingleEntryForm = ({ accounts, onDelete, onPreview, initialValues }) => {
               size="sm"
               className=""
             >
-              <HiTrash className="" />
-              Delete
+              <HiMinus className="" />
+              Remove
             </Button>
           </div>
         </div>
