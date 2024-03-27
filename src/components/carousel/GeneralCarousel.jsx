@@ -14,7 +14,6 @@ const GeneralCarousel = ({ transactions }) => {
     result[type].accounts[accountName] +=
       dc === "debit" ? parseFloat(amount) : -parseFloat(amount);
 
-    // Calculate the total for each type
     result[type].total +=
       dc === "debit" ? parseFloat(amount) : -parseFloat(amount);
 

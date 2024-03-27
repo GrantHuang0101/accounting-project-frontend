@@ -15,6 +15,8 @@ import DeleteTransaction from "../views/dashborad/custom-transacitions/DeleteTra
 import Introduction from "../views/landing/Introduction";
 import QuickAdd from "../views/dashborad/quick-add/QuickAdd";
 import PLManagement from "../views/dashborad/profit-loss-management/PLManagement";
+import CashFlowAnalytics from "../views/dashborad/analytics/CashFlowAnalytics";
+import CashTransactionDetail from "../views/dashborad/analytics/CashTransactionDetail";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
       {
         path: "/user/analytics",
         element: <Analytics />,
+      },
+      {
+        path: "/user/analytics/cash-flow",
+        element: <CashFlowAnalytics />,
+      },
+      {
+        path: "/user/analytics/cash-flow/:id",
+        element: <CashTransactionDetail />,
       },
 
       {

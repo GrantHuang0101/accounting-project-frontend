@@ -14,7 +14,7 @@
     "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^2.1.1",
     "@material-tailwind/react": "^2.1.8",
-    "@mui/x-charts": "^6.18.7",
+    "@mui/x-charts": "^6.19.3",
     "axios": "^1.6.5",
     "date-fns": "^3.1.0",
     "flowbite-react": "^0.7.2",
